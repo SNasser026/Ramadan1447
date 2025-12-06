@@ -96,12 +96,12 @@ thead th{
   border:1px solid #a9a9a9;
 }
 
-tbody td{
-  padding:0.5rem;
-  text-align:center;
-  border:1px solid #a9a9a9;
-  font-size:17px;
+td[contenteditable="true"] {
+    direction: rtl;
+    unicode-bidi: plaintext;
+    text-align: right;
 }
+
 
 tbody tr:nth-child(odd){ background: rgba(245,245,245,0.7); }
 tbody tr:nth-child(even){ background:#ffffff; }
@@ -294,6 +294,7 @@ db.ref("ramadan_lectures").on("value",snapshot=>{
 
 </body>
 </html>
+
 
 
 
