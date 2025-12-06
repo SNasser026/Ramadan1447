@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="ar">
+<html lang="ar" dir="rtl">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -87,6 +87,7 @@
             border-radius: 12px;
             overflow: hidden;
             border: 2px solid #a9a9a9;
+            direction: ltr; /* نص الجدول من اليسار لليمين */
         }
 
         thead th {
@@ -103,6 +104,7 @@
             text-align: center;
             border: 1px solid #a9a9a9;
             font-size: 17px;
+            direction: ltr; /* الإنجليزية تظهر صحيحة */
         }
 
         tbody tr:nth-child(odd) {
@@ -122,6 +124,7 @@
             color: #fff;
             font-weight: 700;
             width: 120px;
+            direction: rtl; /* العمود الأول عربي */
         }
 
         tbody tr.friday {
@@ -204,20 +207,9 @@
         }
 
         @media print {
-            body * {
-                visibility: hidden;
-            }
-
-            #mainTable, #mainTable * {
-                visibility: visible;
-            }
-
-            #mainTable {
-                position: absolute;
-                top: 0;
-                left: 0;
-                width: 100%;
-            }
+            body * { visibility: hidden; }
+            #mainTable, #mainTable * { visibility: visible; }
+            #mainTable { position: absolute; top: 0; left: 0; width: 100%; }
         }
     </style>
 
@@ -266,7 +258,6 @@
         const weekdays = ["الأحد", "الاثنين", "الثلاثاء", "الأربعاء", "الخميس", "الجمعة", "السبت"];
         const tbody = document.querySelector("#mainTable tbody");
 
-        // Firebase config
         const firebaseConfig = {
             apiKey: "AIzaSyCdhY4owQq8O6wgVOHcQQeaj2mrrwYr-j8",
             authDomain: "ramadan-1447.firebaseapp.com",
@@ -289,6 +280,7 @@
 
             const tdDate = document.createElement("td");
             tdDate.contentEditable = true;
+            tdDate.style.direction = "rtl"; // التاريخ عربي
             tdDate.textContent = `${date.getDate()}/${date.getMonth()+1}/${date.getFullYear()} - ${weekdayName} - رمضان ${i}`;
             tr.appendChild(tdDate);
 
@@ -308,10 +300,12 @@
 
             const tdName = document.createElement("td");
             tdName.contentEditable = true;
+            tdName.style.direction = "ltr"; // اسم المحاضر يمكن أن يكون إنجليزي
             tr.appendChild(tdName);
 
             const tdPhone = document.createElement("td");
             tdPhone.contentEditable = true;
+            tdPhone.style.direction = "ltr"; // رقم التواصل إنجليزي
             tr.appendChild(tdPhone);
 
             tbody.appendChild(tr);
@@ -348,4 +342,3 @@
     </script>
 </body>
 </html>
-
