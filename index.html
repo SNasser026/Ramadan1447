@@ -79,7 +79,8 @@ table{
   width:100%;
   min-width:650px;
   border-collapse:collapse;
-  font-size:18px;
+  font-size:19px; /* تكبير الخط */
+  line-height:1.6; /* زيادة التباعد بين السطور */
   background:#fff;
   border-radius:12px;
   overflow:hidden;
@@ -90,31 +91,57 @@ thead th{
   background:var(--header-col);
   color:#fff;
   text-align:center;
-  padding:14px;
-  font-size:18px;
+  padding:16px; /* زيادة الحشو */
+  font-size:19px; /* تكبير النص */
   border:1px solid #a9a9a9;
 }
 
 tbody td{
-  padding:14px;
+  padding:16px; /* زيادة الحشو */
   text-align:center;
   border:1px solid #a9a9a9;
-  font-size:17px;
+  font-size:18px; /* تكبير النص */
 }
-
-tbody tr:nth-child(odd){ background: rgba(245,245,245,0.7); }
-tbody tr:nth-child(even){ background:#ffffff; }
-tbody tr:hover{ background:#e0f0e8; }
 
 tbody td:first-child{
   background:var(--first-col);
   color:#fff;
   font-weight:700;
-  width:120px; /* تصغير العمود الأول */
+  width:150px; /* توسيع العمود الأول قليلًا */
+}
+
+tbody tr:nth-child(odd){ 
+  background: rgba(245,245,245,0.85); /* زيادة التباين قليلاً */
+}
+
+tbody tr:nth-child(even){ 
+  background:#ffffff; 
+}
+
+tbody tr:hover{ 
+  background:#e0f0e8; 
 }
 
 tbody tr.friday{
   background-color:var(--friday) !important;
+}
+
+/* تحسين المقاسات للجوال */
+@media (max-width:600px){
+  table{
+    font-size:16px;
+    min-width:600px;
+  }
+  thead th, tbody td{
+    padding:12px; 
+    font-size:16px;
+  }
+  h1,h2{
+    font-size:22px;
+  }
+  tbody td:first-child{
+    width:120px; 
+  }
 }
 
 .card-header {
@@ -166,6 +193,7 @@ tbody tr.friday{
   #mainTable, #mainTable * { visibility: visible; }
   #mainTable { position:absolute; top:0; left:0; width:100%; }
 }
+
 </style>
 <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
@@ -297,5 +325,6 @@ db.ref("ramadan_lectures").on("value", snapshot => {
 </script>
 </body>
 </html>
+
 
 
