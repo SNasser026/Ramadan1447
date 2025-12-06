@@ -87,7 +87,6 @@
             border-radius: 12px;
             overflow: hidden;
             border: 2px solid #a9a9a9;
-            direction: ltr; /* نص الجدول من اليسار لليمين */
         }
 
         thead th {
@@ -104,7 +103,6 @@
             text-align: center;
             border: 1px solid #a9a9a9;
             font-size: 17px;
-            direction: ltr; /* الإنجليزية تظهر صحيحة */
         }
 
         tbody tr:nth-child(odd) {
@@ -124,7 +122,6 @@
             color: #fff;
             font-weight: 700;
             width: 120px;
-            direction: rtl; /* العمود الأول عربي */
         }
 
         tbody tr.friday {
@@ -218,127 +215,146 @@
 </head>
 
 <body>
-    <div class="container">
-        <div class="card">
-            <div class="card-header">
-                <div style="display:flex;align-items:center;">
-                    <button id="saveBtn">💾 حفظ</button>
-                    <span id="saveMessage">تم الحفظ بنجاح ✅</span>
-                    <button id="printBtn">🖨️ طباعة</button>
-                </div>
-                <div class="contact-box">
-                    <strong> إدارة الجامع:</strong><br/>
-                    فيصل المبسلي: 98036047<br/>
-                    داوود المبسلي: 95522897
-                </div>
+<div class="container">
+    <div class="card">
+        <div class="card-header">
+            <div style="display:flex;align-items:center;">
+                <button id="saveBtn">💾 حفظ</button>
+                <span id="saveMessage">تم الحفظ بنجاح ✅</span>
+                <button id="printBtn">🖨️ طباعة</button>
             </div>
-
-            <h1>جدول محاضرات رمضان 1447 - جامع الإمام الربيع بن حبيب</h1>
-            <h2>السيب - وادي اللوامي</h2>
-
-            <div class="table-wrapper">
-                <table id="mainTable">
-                    <thead>
-                        <tr>
-                            <th>التاريخ</th>
-                            <th>الوقت</th>
-                            <th>اسم المحاضر</th>
-                            <th>رقم التواصل</th>
-                        </tr>
-                    </thead>
-                    <tbody></tbody>
-                </table>
+            <div class="contact-box">
+                <strong> إدارة الجامع:</strong><br/>
+                فيصل المبسلي: 98036047<br/>
+                داوود المبسلي: 95522897
             </div>
         </div>
+
+        <h1>جدول محاضرات رمضان 1447 - جامع الإمام الربيع بن حبيب</h1>
+        <h2>السيب - وادي اللوامي</h2>
+
+        <div class="table-wrapper">
+            <table id="mainTable">
+                <thead>
+                <tr>
+                    <th>التاريخ</th>
+                    <th>الوقت</th>
+                    <th>اسم المحاضر</th>
+                    <th>رقم التواصل</th>
+                </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
     </div>
+</div>
 
-    <script>
-        const TOTAL_DAYS = 30;
-        const START_DATE = new Date(2026, 1, 18);
-        const weekdays = ["الأحد", "الاثنين", "الثلاثاء", "الأربعاء", "الخميس", "الجمعة", "السبت"];
-        const tbody = document.querySelector("#mainTable tbody");
+<script>
+    const TOTAL_DAYS = 30;
+    const START_DATE = new Date(2026, 1, 18);
+    const weekdays = ["الأحد","الاثنين","الثلاثاء","الأربعاء","الخميس","الجمعة","السبت"];
+    const tbody = document.querySelector("#mainTable tbody");
 
-        const firebaseConfig = {
-            apiKey: "AIzaSyCdhY4owQq8O6wgVOHcQQeaj2mrrwYr-j8",
-            authDomain: "ramadan-1447.firebaseapp.com",
-            databaseURL: "https://ramadan-1447-default-rtdb.firebaseio.com",
-            projectId: "ramadan-1447",
-            storageBucket: "ramadan-1447.firebasestorage.app",
-            messagingSenderId: "322777922760",
-            appId: "1:322777922760:web:c20f28bfc04698dae039fd",
-            measurementId: "G-4SQT5J8CFH"
-        };
-        firebase.initializeApp(firebaseConfig);
-        const db = firebase.database();
+    const firebaseConfig = {
+        apiKey: "AIzaSyCdhY4owQq8O6wgVOHcQQeaj2mrrwYr-j8",
+        authDomain: "ramadan-1447.firebaseapp.com",
+        databaseURL: "https://ramadan-1447-default-rtdb.firebaseio.com",
+        projectId: "ramadan-1447",
+        storageBucket: "ramadan-1447.firebasestorage.app",
+        messagingSenderId: "322777922760",
+        appId: "1:322777922760:web:c20f28bfc04698dae039fd",
+        measurementId: "G-4SQT5J8CFH"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
 
-        for (let i = 1; i <= TOTAL_DAYS; i++) {
-            const tr = document.createElement("tr");
-            const date = new Date(START_DATE);
-            date.setDate(START_DATE.getDate() + (i - 1));
-            const weekdayName = weekdays[date.getDay()];
-            if (weekdayName === "الجمعة") tr.classList.add("friday");
-
-            const tdDate = document.createElement("td");
-            tdDate.contentEditable = true;
-            tdDate.style.direction = "rtl"; // التاريخ عربي
-            tdDate.textContent = `${date.getDate()}/${date.getMonth()+1}/${date.getFullYear()} - ${weekdayName} - رمضان ${i}`;
-            tr.appendChild(tdDate);
-
-            const tdTime = document.createElement("td");
-            const selectTime = document.createElement("select");
-            const options = weekdayName === "الجمعة" 
-                ? ["بعد صلاة الجمعة","بعد صلاة العصر","بعد صلاة المغرب","بعد صلاة العشاء"]
-                : ["بعد صلاة الظهر","بعد صلاة العصر","بعد صلاة المغرب","بعد صلاة العشاء"];
-            options.forEach(opt => {
-                const option = document.createElement("option");
-                option.value = opt;
-                option.textContent = opt;
-                selectTime.appendChild(option);
-            });
-            tdTime.appendChild(selectTime);
-            tr.appendChild(tdTime);
-
-            const tdName = document.createElement("td");
-            tdName.contentEditable = true;
-            tdName.style.direction = "ltr"; // اسم المحاضر يمكن أن يكون إنجليزي
-            tr.appendChild(tdName);
-
-            const tdPhone = document.createElement("td");
-            tdPhone.contentEditable = true;
-            tdPhone.style.direction = "ltr"; // رقم التواصل إنجليزي
-            tr.appendChild(tdPhone);
-
-            tbody.appendChild(tr);
+    // دالة لتحديد اتجاه النص تلقائيًا
+    function setDirection(cell) {
+        const arabicRegex = /[\u0600-\u06FF]/;
+        const content = cell.textContent.trim();
+        if (arabicRegex.test(content)) {
+            cell.style.direction = "rtl";
+            cell.style.textAlign = "right";
+        } else {
+            cell.style.direction = "ltr";
+            cell.style.textAlign = "left";
         }
+    }
 
-        tbody.addEventListener("input", () => {
-            const rows = Array.from(tbody.querySelectorAll("tr")).map(tr => {
-                const tds = tr.querySelectorAll("td");
-                return {
-                    date: tds[0].textContent.trim(),
-                    time: tds[1].querySelector("select").value,
-                    lecturer: tds[2].textContent.trim(),
-                    contact: tds[3].textContent.trim()
-                };
-            });
-            db.ref("ramadan_lectures").set(rows);
-            document.getElementById("saveMessage").style.display = "inline";
-            setTimeout(()=>{document.getElementById("saveMessage").style.display = "none";},1500);
+    for (let i = 1; i <= TOTAL_DAYS; i++) {
+        const tr = document.createElement("tr");
+        const date = new Date(START_DATE);
+        date.setDate(START_DATE.getDate() + (i - 1));
+        const weekdayName = weekdays[date.getDay()];
+        if (weekdayName === "الجمعة") tr.classList.add("friday");
+
+        const tdDate = document.createElement("td");
+        tdDate.contentEditable = true;
+        tdDate.textContent = `${date.getDate()}/${date.getMonth()+1}/${date.getFullYear()} - ${weekdayName} - رمضان ${i}`;
+        setDirection(tdDate);
+        tr.appendChild(tdDate);
+
+        const tdTime = document.createElement("td");
+        const selectTime = document.createElement("select");
+        const options = weekdayName === "الجمعة"
+            ? ["بعد صلاة الجمعة","بعد صلاة العصر","بعد صلاة المغرب","بعد صلاة العشاء"]
+            : ["بعد صلاة الظهر","بعد صلاة العصر","بعد صلاة المغرب","بعد صلاة العشاء"];
+        options.forEach(opt => {
+            const option = document.createElement("option");
+            option.value = opt;
+            option.textContent = opt;
+            selectTime.appendChild(option);
+        });
+        tdTime.appendChild(selectTime);
+        tr.appendChild(tdTime);
+
+        const tdName = document.createElement("td");
+        tdName.contentEditable = true;
+        setDirection(tdName);
+        tr.appendChild(tdName);
+
+        const tdPhone = document.createElement("td");
+        tdPhone.contentEditable = true;
+        setDirection(tdPhone);
+        tr.appendChild(tdPhone);
+
+        tbody.appendChild(tr);
+    }
+
+    // تحديث الاتجاه عند تحرير أي خلية
+    tbody.addEventListener("input", (e) => {
+        const cell = e.target.closest("td");
+        if (cell) setDirection(cell);
+
+        const rows = Array.from(tbody.querySelectorAll("tr")).map(tr => {
+            const tds = tr.querySelectorAll("td");
+            return {
+                date: tds[0].textContent.trim(),
+                time: tds[1].querySelector("select").value,
+                lecturer: tds[2].textContent.trim(),
+                contact: tds[3].textContent.trim()
+            };
         });
 
-        db.ref("ramadan_lectures").on("value", snapshot => {
-            const data = snapshot.val();
-            if (!data) return;
-            tbody.querySelectorAll("tr").forEach((tr,i) => {
-                const tds = tr.querySelectorAll("td");
-                if (data[i]) {
-                    tds[0].textContent = data[i].date;
-                    tds[1].querySelector("select").value = data[i].time;
-                    tds[2].textContent = data[i].lecturer;
-                    tds[3].textContent = data[i].contact;
-                }
-            });
+        db.ref("ramadan_lectures").set(rows);
+        document.getElementById("saveMessage").style.display = "inline";
+        setTimeout(()=>{document.getElementById("saveMessage").style.display = "none";},1500);
+    });
+
+    db.ref("ramadan_lectures").on("value", snapshot => {
+        const data = snapshot.val();
+        if (!data) return;
+        tbody.querySelectorAll("tr").forEach((tr,i) => {
+            const tds = tr.querySelectorAll("td");
+            if (data[i]) {
+                tds[0].textContent = data[i].date;
+                tds[1].querySelector("select").value = data[i].time;
+                tds[2].textContent = data[i].lecturer;
+                tds[3].textContent = data[i].contact;
+                tds.forEach(td => setDirection(td)); // تحديث الاتجاه تلقائيًا
+            }
         });
-    </script>
+    });
+</script>
 </body>
 </html>
