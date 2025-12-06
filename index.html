@@ -18,6 +18,14 @@
   --header-col:#49876d;
   --first-col:#49876d;
 }
+  table td, table th {
+    border: 1px solid #bdbdbd !important; /* فاصل واضح */
+}
+td, th {
+    text-align: center !important;
+    vertical-align: middle !important;
+}
+
 
 html, body{
   margin:0;
@@ -72,13 +80,13 @@ thead th{
   padding:0.5rem; font-size:18px; border:1px solid #a9a9a9;
 }
 
-/* إصلاح التنسيق العام */
-td[contenteditable="true"]{
-  direction: rtl !important;
-  text-align: right !important;
-  unicode-bidi: plaintext !important;
-  white-space: pre-wrap;
+td[contenteditable="true"] {
+    direction: rtl;
+    unicode-bidi: plaintext;
+    text-align: center !important;   /* وسط أفقي */
+    vertical-align: middle !important; /* وسط عمودي */
 }
+
 
 tbody tr:nth-child(odd){ background: rgba(245,245,245,0.7); }
 tbody tr:nth-child(even){ background:#ffffff; }
@@ -303,3 +311,4 @@ db.ref("ramadan_lectures").on("value", snap=>{
 
 </body>
 </html>
+
