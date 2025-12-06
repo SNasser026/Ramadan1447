@@ -31,9 +31,11 @@ input, textarea {
     text-align: center;
 }
 
+/* إصلاح كتابة النصوص العربية في contentEditable */
 td[contenteditable="true"] {
-    direction: rtl;       /* يضمن الكتابة من اليمين لليسار */
-    text-align: right;    /* محاذاة النص إلى اليمين */
+    direction: rtl;           /* اتجاه الكتابة من اليمين لليسار */
+    text-align: right;        /* محاذاة النص لليمين */
+    unicode-bidi: plaintext;  /* منع انعكاس الحروف */
 }
 
 .container{
@@ -51,30 +53,36 @@ td[contenteditable="true"] {
   position:relative;
 }
 
-.card:before{
-  content:"";
-  position:absolute;
-  top:-10px;left:-10px;right:-10px;bottom:-10px;
-  border:3px solid var(--gold);
-  border-radius:20px;
-  pointer-events:none;
+.card-header {
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  flex-wrap:wrap;
+  padding:12px 10px;
 }
 
-h1::before{
-  content:"";
-  display:block;
-  width:140px;
-  height:160px;
-  margin:0 auto 10px auto;
-  background:url('./img.png') center/contain no-repeat;
+#saveBtn, #printBtn {
+  padding:10px 16px;
+  border-radius:12px;
+  cursor:pointer;
+  font-weight:bold;
+  color:#fff;
+  font-size:15px;
+  border:none;
+  transition:0.2s;
 }
 
-h1,h2{
-  font-size:26px;
-  text-align:center;
-  margin-bottom:15px;
-  color:var(--accent);
-  font-weight:700;
+#saveBtn { background: var(--gold); }
+#saveBtn:hover { background: #c49b2c; }
+
+#printBtn { background: var(--accent); margin-left:10px; }
+#printBtn:hover { background:#397155; }
+
+#saveMessage{
+  color:green;
+  font-weight:bold;
+  display:none;
+  margin-right:8px;
 }
 
 .table-wrapper{
@@ -136,38 +144,6 @@ tbody tr.friday{
   }
 }
 
-.card-header {
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  flex-wrap:wrap;
-  padding:12px 10px;
-}
-
-#saveBtn, #printBtn {
-  padding:10px 16px;
-  border-radius:12px;
-  cursor:pointer;
-  font-weight:bold;
-  color:#fff;
-  font-size:15px;
-  border:none;
-  transition:0.2s;
-}
-
-#saveBtn { background: var(--gold); }
-#saveBtn:hover { background: #c49b2c; }
-
-#printBtn { background: var(--accent); margin-left:10px; }
-#printBtn:hover { background:#397155; }
-
-#saveMessage{
-  color:green;
-  font-weight:bold;
-  display:none;
-  margin-right:8px;
-}
-
 .contact-box{
   background:var(--card);
   padding:8px 15px;
@@ -180,11 +156,6 @@ tbody tr.friday{
   box-shadow:0 2px 6px rgba(0,0,0,0.08);
 }
 
-@media print {
-  body * { visibility: hidden; }
-  #mainTable, #mainTable * { visibility: visible; }
-  #mainTable { position:absolute; top:0; left:0; width:100%; }
-}
 </style>
 <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
@@ -207,7 +178,6 @@ tbody tr.friday{
     </div>
 
     <h1>جدول محاضرات رمضان 1447 - جامع الإمام الربيع بن حبيب</h1>
-    <h2>السيب - وادي اللوامي</h2>
 
     <div class="table-wrapper">
       <table id="mainTable">
@@ -255,7 +225,7 @@ for (let i=1; i<=TOTAL_DAYS; i++) {
 
   const tdDate = document.createElement("td");
   tdDate.contentEditable = true;
-  tdDate.dir = "rtl";           // ← إصلاح RTL
+  tdDate.dir = "rtl";  // إصلاح RTL
   tdDate.textContent = `${date.getDate()}/${date.getMonth()+1}/${date.getFullYear()} - ${weekdayName} - رمضان ${i}`;
   tr.appendChild(tdDate);
 
@@ -275,12 +245,12 @@ for (let i=1; i<=TOTAL_DAYS; i++) {
 
   const tdName = document.createElement("td");
   tdName.contentEditable = true;
-  tdName.dir = "rtl";           // ← إصلاح RTL
+  tdName.dir = "rtl";  // إصلاح RTL
   tr.appendChild(tdName);
 
   const tdPhone = document.createElement("td");
   tdPhone.contentEditable = true;
-  tdPhone.dir = "rtl";          // ← إصلاح RTL
+  tdPhone.dir = "rtl";  // إصلاح RTL
   tr.appendChild(tdPhone);
 
   tbody.appendChild(tr);
