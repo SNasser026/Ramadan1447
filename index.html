@@ -25,6 +25,10 @@ html, body{
   background-size:300px;
   color:#000;
 }
+input, textarea {
+    direction: rtl;
+    text-align: center; /* لضمان المحاذاة الصحيحة */
+}
 
 .container{
   max-width:1000px;
@@ -198,7 +202,7 @@ tbody tr.friday{
       </div>
     </div>
 
-    <h1>جدولمحاضرات رمضان 1447 - جامع الإمام الربيع بن حبيب</h1>
+    <h1>جدول محاضرات رمضان 1447 - جامع الإمام الربيع بن حبيب</h1>
     <h2>السيب - وادي اللوامي</h2>
 
     <div class="table-wrapper">
@@ -306,6 +310,7 @@ db.ref("ramadan_lectures").on("value", snapshot => {
 </script>
 </body>
 </html>
+
 
 
 
