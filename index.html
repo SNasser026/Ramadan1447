@@ -20,18 +20,14 @@
 
 html, body{
   margin:0;
-   padding:1rem;
+  padding:1rem;
   font-family:'Amiri', serif;
   background:var(--bg) url('https://www.toptal.com/designers/subtlepatterns/uploads/moroccan-flower.png') repeat;
   background-size:300px;
   color:#000;
 }
 
-.container{
-  max-width:1000px;
-  margin:20px auto;
-  padding:15px;
-}
+.container{ max-width:1000px; margin:20px auto; padding:15px; }
 
 .card{
   background:var(--card);
@@ -60,20 +56,9 @@ h1::before{
   background:url('./img.png') center/contain no-repeat;
 }
 
-h1,h2{
-  font-size:26px;
-  text-align:center;
-  margin-bottom:15px;
-  color:var(--accent);
-  font-weight:700;
-}
+h1,h2{ font-size:26px; text-align:center; margin-bottom:15px; color:var(--accent); font-weight:700; }
 
-.table-wrapper{
-  width:100%;
-  overflow-x:auto;
-  -webkit-overflow-scrolling:touch;
-  margin-top:10px;
-}
+.table-wrapper{ width:100%; overflow-x:auto; -webkit-overflow-scrolling:touch; margin-top:10px; }
 
 table{
   width:100%;
@@ -91,18 +76,21 @@ thead th{
   background:var(--header-col);
   color:#fff;
   text-align:center;
-   padding:0.5rem;
+  padding:0.5rem;
   font-size:18px;
   border:1px solid #a9a9a9;
 }
 
+/* قواعد للخلايا القابلة للتحرير */
 td[contenteditable="true"] {
-    direction: rtl;
-    unicode-bidi: plaintext;
-    text-align: right;
+  direction: rtl !important;
+  unicode-bidi: isolate-override !important;
+  text-align: right !important;
+  white-space: pre-wrap;
+  caret-color: auto;
 }
 
-
+tbody td{ padding:0.5rem; text-align:center; border:1px solid #a9a9a9; font-size:17px; }
 tbody tr:nth-child(odd){ background: rgba(245,245,245,0.7); }
 tbody tr:nth-child(even){ background:#ffffff; }
 tbody tr:hover{ background:#e0f0e8; }
@@ -111,56 +99,20 @@ tbody td:first-child{
   background:var(--first-col);
   color:#fff;
   font-weight:700;
-  width:120px; /* تصغير العمود الأول */
+  width:120px;
 }
 
-tbody tr.friday{
-  background-color:var(--friday) !important;
-}
+tbody tr.friday{ background-color:var(--friday) !important; }
 
-.card-header {
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  flex-wrap:wrap;
-  padding:12px 10px;
-}
+.card-header { display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; padding:12px 10px; }
 
-#saveBtn, #printBtn {
-  padding:10px 16px;
-  border-radius:12px;
-  cursor:pointer;
-  font-weight:bold;
-  color:#fff;
-  font-size:15px;
-  border:none;
-  transition:0.2s;
-}
+#saveBtn, #printBtn { padding:10px 16px; border-radius:12px; cursor:pointer; font-weight:bold; color:#fff; font-size:15px; border:none; transition:0.2s; }
+#saveBtn { background: var(--gold); } #saveBtn:hover { background: #c49b2c; }
+#printBtn { background: var(--accent); margin-left:10px; } #printBtn:hover { background:#397155; }
 
-#saveBtn { background: var(--gold); }
-#saveBtn:hover { background: #c49b2c; }
+#saveMessage{ color:green; font-weight:bold; display:none; margin-right:8px; }
 
-#printBtn { background: var(--accent); margin-left:10px; }
-#printBtn:hover { background:#397155; }
-
-#saveMessage{
-  color:green;
-  font-weight:bold;
-  display:none;
-  margin-right:8px;
-}
-
-.contact-box{
-  background:var(--card);
-  padding:8px 15px;
-  border:2px solid var(--gold);
-  border-radius:12px;
-  text-align:center;
-  color:var(--accent);
-  font-size:15px;
-  line-height:1.6;
-  box-shadow:0 2px 6px rgba(0,0,0,0.08);
-}
+.contact-box{ background:var(--card); padding:8px 15px; border:2px solid var(--gold); border-radius:12px; text-align:center; color:var(--accent); font-size:15px; line-height:1.6; box-shadow:0 2px 6px rgba(0,0,0,0.08); }
 
 @media print {
   body * { visibility: hidden; }
@@ -169,132 +121,192 @@ tbody tr.friday{
 }
 </style>
 
+<!-- Firebase (compat) -->
 <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
 </head>
 <body>
 
 <div class="container">
-<div class="card">
-<div class="card-header">
-<div style="display:flex;align-items:center;">
-<button id="saveBtn">💾 حفظ</button>
-<span id="saveMessage">تم الحفظ بنجاح ✅</span>
-<button id="printBtn">🖨️ طباعة</button>
-</div>
-<div class="contact-box">
-<strong> إدارة الجامع:</strong><br/>
-فيصل المبسلي: 98036047<br/>
-داوود المبسلي: 95522897
-</div>
-</div>
+  <div class="card">
+    <div class="card-header">
+      <div style="display:flex;align-items:center;">
+        <button id="saveBtn">💾 حفظ</button>
+        <span id="saveMessage">تم الحفظ بنجاح ✅</span>
+        <button id="printBtn">🖨️ طباعة</button>
+      </div>
+      <div class="contact-box">
+        <strong> إدارة الجامع:</strong><br/>
+        فيصل المبسلي: 98036047<br/>
+        داوود المبسلي: 95522897
+      </div>
+    </div>
 
-<h1>جدول محاضرات رمضان 1447 - جامع الإمام الربيع بن حبيب</h1>
-<h2>السيب - وادي اللوامي</h2>
+    <h1>جدول محاضرات رمضان 1447 - جامع الإمام الربيع بن حبيب</h1>
+    <h2>السيب - وادي اللوامي</h2>
 
-<div class="table-wrapper">
-<table id="mainTable">
-<thead>
-<tr>
-<th>التاريخ</th>
-<th>الوقت</th>
-<th>اسم المحاضر</th>
-<th>رقم التواصل</th>
-</tr>
-</thead>
-<tbody></tbody>
-</table>
-</div>
-</div>
+    <div class="table-wrapper">
+      <table id="mainTable">
+        <thead>
+          <tr>
+            <th>التاريخ</th>
+            <th>الوقت</th>
+            <th>اسم المحاضر</th>
+            <th>رقم التواصل</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </div>
 </div>
 
 <script>
-const TOTAL_DAYS=30;
-const START_DATE=new Date(2026,1,18);
-const weekdays=["الأحد","الاثنين","الثلاثاء","الأربعاء","الخميس","الجمعة","السبت"];
-const tbody=document.querySelector("#mainTable tbody");
+/* ====== إعداد وسياق الجدول و Firebase ====== */
+const TOTAL_DAYS = 30;
+const START_DATE = new Date(2026,1,18); // ملاحظة: الأشهر تبدأ من 0
+const weekdays = ["الأحد","الاثنين","الثلاثاء","الأربعاء","الخميس","الجمعة","السبت"];
+const tbody = document.querySelector("#mainTable tbody");
 
 const firebaseConfig = {
-apiKey: "AIzaSyCdhY4owQq8O6wgVOHcQQeaj2mrrwYr-j8",
-authDomain: "ramadan-1447.firebaseapp.com",
-databaseURL: "https://ramadan-1447-default-rtdb.firebaseio.com",
-projectId: "ramadan-1447",
-storageBucket: "ramadan-1447.firebasestorage.app",
-messagingSenderId: "322777922760",
-appId: "1:322777922760:web:c20f28bfc04698dae039fd",
-measurementId: "G-4SQT5J8CFH"
+  apiKey: "AIzaSyCdhY4owQq8O6wgVOHcQQeaj2mrrwYr-j8",
+  authDomain: "ramadan-1447.firebaseapp.com",
+  databaseURL: "https://ramadan-1447-default-rtdb.firebaseio.com",
+  projectId: "ramadan-1447",
+  storageBucket: "ramadan-1447.firebasestorage.app",
+  messagingSenderId: "322777922760",
+  appId: "1:322777922760:web:c20f28bfc04698dae039fd",
+  measurementId: "G-4SQT5J8CFH"
 };
 firebase.initializeApp(firebaseConfig);
-const db=firebase.database();
+const db = firebase.database();
 
-// إنشاء الجدول
+/* إنشاء الصفوف والخلايا */
 for(let i=1;i<=TOTAL_DAYS;i++){
-    const tr=document.createElement("tr");
-    const date=new Date(START_DATE);
-    date.setDate(START_DATE.getDate()+(i-1));
-    const weekdayName=weekdays[date.getDay()];
-    if(weekdayName==="الجمعة") tr.classList.add("friday");
+  const tr = document.createElement("tr");
+  const date = new Date(START_DATE);
+  date.setDate(START_DATE.getDate() + (i-1));
+  const weekdayName = weekdays[date.getDay()];
+  if (weekdayName === "الجمعة") tr.classList.add("friday");
 
-    const tdDate=document.createElement("td");
-    tdDate.contentEditable=true;
-    tdDate.textContent=`${date.getDate()}/${date.getMonth()+1}/${date.getFullYear()} - ${weekdayName} - رمضان ${i}`;
-    tr.appendChild(tdDate);
+  const tdDate = document.createElement("td");
+  tdDate.contentEditable = "true";
+  tdDate.setAttribute('dir','rtl');
+  tdDate.setAttribute('lang','ar');
+  tdDate.textContent = `${date.getDate()}/${date.getMonth()+1}/${date.getFullYear()} - ${weekdayName} - رمضان ${i}`;
+  tr.appendChild(tdDate);
 
-    const tdTime=document.createElement("td");
-    const selectTime=document.createElement("select");
-    const options=weekdayName==="الجمعة"
-        ? ["بعد صلاة الجمعة","بعد صلاة العصر","بعد صلاة المغرب","بعد صلاة العشاء"]
-        : ["بعد صلاة الظهر","بعد صلاة العصر","بعد صلاة المغرب","بعد صلاة العشاء"];
-    options.forEach(opt=>{const option=document.createElement("option"); option.value=opt; option.textContent=opt; selectTime.appendChild(option);});
-    tdTime.appendChild(selectTime);
-    tr.appendChild(tdTime);
+  const tdTime = document.createElement("td");
+  const selectTime = document.createElement("select");
+  const options = weekdayName==="الجمعة"
+    ? ["بعد صلاة الجمعة","بعد صلاة العصر","بعد صلاة المغرب","بعد صلاة العشاء"]
+    : ["بعد صلاة الظهر","بعد صلاة العصر","بعد صلاة المغرب","بعد صلاة العشاء"];
+  options.forEach(opt=>{
+    const option = document.createElement("option");
+    option.value = opt;
+    option.textContent = opt;
+    selectTime.appendChild(option);
+  });
+  tdTime.appendChild(selectTime);
+  tr.appendChild(tdTime);
 
-    const tdName=document.createElement("td");
-    tdName.contentEditable=true;
-    tr.appendChild(tdName);
+  const tdName = document.createElement("td");
+  tdName.contentEditable = "true";
+  tdName.setAttribute('dir','rtl');
+  tdName.setAttribute('lang','ar');
+  tr.appendChild(tdName);
 
-    const tdPhone=document.createElement("td");
-    tdPhone.contentEditable=true;
-    tr.appendChild(tdPhone);
+  const tdPhone = document.createElement("td");
+  tdPhone.contentEditable = "true";
+  tdPhone.setAttribute('dir','rtl');
+  tdPhone.setAttribute('lang','ar');
+  tr.appendChild(tdPhone);
 
-    tbody.appendChild(tr);
+  tbody.appendChild(tr);
 }
 
-// حفظ البيانات
-tbody.addEventListener("input",(e)=>{
-    const rows=Array.from(tbody.querySelectorAll("tr")).map(tr=>{
-        const tds=tr.querySelectorAll("td");
-        return {
-            date: tds[0].textContent.trim(),
-            time: tds[1].querySelector("select").value,
-            lecturer: tds[2].textContent.trim(),
-            contact: tds[3].textContent.trim()
-        };
+/* ====== وظائف مساعدة RTL و caret ====== */
+function placeCaretAtEnd(el){
+  el.focus();
+  if (typeof window.getSelection !== "undefined" && typeof document.createRange !== "undefined") {
+    const range = document.createRange();
+    range.selectNodeContents(el);
+    range.collapse(false);
+    const sel = window.getSelection();
+    sel.removeAllRanges();
+    sel.addRange(range);
+  } else if (typeof document.body.createTextRange !== "undefined") {
+    const textRange = document.body.createTextRange();
+    textRange.moveToElementText(el);
+    textRange.collapse(false);
+    textRange.select();
+  }
+}
+
+function ensureRTLCells(){
+  const editableTds = document.querySelectorAll('#mainTable td[contenteditable="true"]');
+  editableTds.forEach(td=>{
+    td.setAttribute('dir','rtl');
+    td.setAttribute('lang','ar');
+
+    td.addEventListener('focus', ()=>{
+      const val = td.textContent || '';
+      // إذا الحقل فارغ أو يبدأ برمز/رقم غير عربي نضيف RLM
+      if(!val.trim() || !/[\u0600-\u06FF\u0750-\u077F\u08A0-\u08FF]/.test(val.trim().charAt(0))){
+        if(!val.startsWith('\u200F')){
+          td.textContent = '\u200F' + val;
+          placeCaretAtEnd(td);
+        }
+      } else {
+        // ضع المؤشر في النهاية عند التركيز
+        placeCaretAtEnd(td);
+      }
     });
-    db.ref("ramadan_lectures").set(rows);
-    document.getElementById("saveMessage").style.display="inline";
-    setTimeout(()=>{document.getElementById("saveMessage").style.display="none";},1500);
+
+    // عند الخروج نترك القيمة كما هي؛ سننظفها قبل الحفظ
+  });
+}
+ensureRTLCells();
+
+/* تنظيف القيمة قبل الحفظ (إزالة RLM في البداية) */
+function cleanValueForSave(s){
+  return s ? s.replace(/^\u200F+/,'').trim() : s;
+}
+
+/* مستمع حفظ/تحديث واحد (نستخدم cleanValueForSave) */
+tbody.addEventListener("input",(e)=>{
+  const rows = Array.from(tbody.querySelectorAll("tr")).map(tr=>{
+    const tds = tr.querySelectorAll("td");
+    return {
+      date: cleanValueForSave(tds[0].textContent),
+      time: tds[1].querySelector("select").value,
+      lecturer: cleanValueForSave(tds[2].textContent),
+      contact: cleanValueForSave(tds[3].textContent)
+    };
+  });
+  db.ref("ramadan_lectures").set(rows)
+    .then(()=> {
+      document.getElementById("saveMessage").style.display = "inline";
+      setTimeout(()=>{ document.getElementById("saveMessage").style.display = "none"; },1500);
+    })
+    .catch(err => console.error("Firebase write error:", err));
 });
 
-// جلب البيانات من Firebase
-db.ref("ramadan_lectures").on("value",snapshot=>{
-    const data=snapshot.val();
-    if(!data) return;
-    tbody.querySelectorAll("tr").forEach((tr,i)=>{
-        const tds=tr.querySelectorAll("td");
-        if(data[i]){
-            tds[0].textContent=data[i].date;
-            tds[1].querySelector("select").value=data[i].time;
-            tds[2].textContent=data[i].lecturer;
-            tds[3].textContent=data[i].contact;
-        }
-    });
+/* جلب البيانات من Firebase - تعيينها على الخلايا */
+db.ref("ramadan_lectures").on("value", snapshot=>{
+  const data = snapshot.val();
+  if(!data) return;
+  tbody.querySelectorAll("tr").forEach((tr,i)=>{
+    const tds = tr.querySelectorAll("td");
+    if(data[i]){
+      tds[0].textContent = data[i].date || tds[0].textContent;
+      tds[1].querySelector("select").value = data[i].time || tds[1].querySelector("select").value;
+      tds[2].textContent = data[i].lecturer || '';
+      tds[3].textContent = data[i].contact || '';
+    }
+  });
 });
 </script>
 
 </body>
 </html>
-
-
-
-
