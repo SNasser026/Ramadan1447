@@ -111,16 +111,6 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
 
-function setDirection(cell){
-    const arabicRegex = /[\u0600-\u06FF]/;
-    const content = cell.textContent.trim();
-    if(arabicRegex.test(content)){
-        cell.style.direction="rtl";
-        cell.style.textAlign="right";
-    } else {
-        cell.style.direction="ltr";
-        cell.style.textAlign="left";
-    }
 }
 
 const existingDates = new Set();
@@ -170,7 +160,44 @@ for (let date = new Date(START_DATE); date <= END_DATE; date.setDate(date.getDat
 
     ramadanDay++; // زيادة رقم يوم رمضان لكل يوم
 }
+// 🔥 إصلاح مشكلة النصوص على iPhone
+function placeCaretAtEnd(el){
+  const range=document.createRange();
+  const sel=window.getSelection();
+  range.selectNodeContents(el);
+  range.collapse(false);
+  sel.removeAllRanges();
+  sel.addRange(range);
+}
 
+document.addEventListener("focusin", function(e){
+  if(e.target.matches('td[contenteditable="true"]')){
+    e.target.setAttribute("dir","rtl");
+    e.target.setAttribute("lang","ar");
+
+    let val=e.target.textContent.trim();
+    if(!val || !/[\u0600-\u06FF]/.test(val[0])){
+      if(!e.target.textContent.startsWith("\u200F")){
+        e.target.textContent="\u200F"+e.target.textContent;
+        placeCaretAtEnd(e.target);
+      }
+    }
+  }
+});
+
+document.addEventListener("input", function(e){
+  if(e.target.matches('td[contenteditable="true"]')){
+    if(!e.target.textContent.startsWith("\u200F")){
+      e.target.textContent="\u200F"+e.target.textContent;
+      placeCaretAtEnd(e.target);
+    }
+  }
+});
+
+// تنظيف RLM قبل الحفظ
+function clean(v){
+  return v ? v.replace(/^\u200F/,"").trim() : "";
+}
 
 // حفظ البيانات عند التعديل
 tbody.addEventListener("input", (e)=>{
@@ -219,6 +246,7 @@ document.getElementById("printBtn").addEventListener("click", ()=>{
 
 </body>
 </html>
+
 
 
 
