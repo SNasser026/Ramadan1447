@@ -111,10 +111,24 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
 
+// دالة لضبط اتجاه النص حسب اللغة
+function setDirection(cell){
+    const arabicRegex = /[\u0600-\u06FF]/;
+    const content = cell.textContent.trim();
+    if(arabicRegex.test(content)){
+        cell.style.direction = "rtl";
+        cell.style.textAlign = "right";
+        cell.setAttribute("dir", "rtl");
+    } else {
+        cell.style.direction = "ltr";
+        cell.style.textAlign = "left";
+        cell.setAttribute("dir", "ltr");
+    }
 }
 
+// إنشاء جدول التواريخ مع رقم يوم رمضان
 const existingDates = new Set();
-let ramadanDay = 1; // رقم رمضان يبدأ من 1
+let ramadanDay = 1;
 
 for (let date = new Date(START_DATE); date <= END_DATE; date.setDate(date.getDate() + 1)) {
     const weekdayName = weekdays[date.getDay()];
@@ -158,7 +172,7 @@ for (let date = new Date(START_DATE); date <= END_DATE; date.setDate(date.getDat
 
     tbody.appendChild(tr);
 
-    ramadanDay++; // زيادة رقم يوم رمضان لكل يوم
+    ramadanDay++;
 }
 
 // حفظ البيانات عند التعديل
@@ -169,7 +183,7 @@ tbody.addEventListener("input", (e)=>{
     const rows = Array.from(tbody.querySelectorAll("tr")).map(tr=>{
         const tds = tr.querySelectorAll("td");
         return {
-            
+            date: tds[0].textContent.trim(),
             time: tds[1].querySelector("select").value,
             lecturer: tds[2].textContent.trim(),
             contact: tds[3].textContent.trim()
@@ -187,7 +201,7 @@ db.ref("ramadan_lectures").on("value", snapshot=>{
     tbody.querySelectorAll("tr").forEach((tr,i)=>{
         const tds = tr.querySelectorAll("td");
         if(data[i]){
-           
+            tds[0].textContent = data[i].date;
             tds[1].querySelector("select").value = data[i].time;
             tds[2].textContent = data[i].lecturer;
             tds[3].textContent = data[i].contact;
@@ -208,8 +222,3 @@ document.getElementById("printBtn").addEventListener("click", ()=>{
 
 </body>
 </html>
-
-
-
-
-
