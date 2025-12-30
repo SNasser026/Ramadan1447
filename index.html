@@ -127,11 +127,12 @@ for(let i=1;i<=TOTAL_DAYS;i++){
     const weekdayName=weekdays[date.getDay()];
     if(weekdayName==="الجمعة") tr.classList.add("friday");
 
-    const tdDate=document.createElement("td");
-    tdDate.contentEditable=true;
-    tdDate.textContent=`${date.getDate()}/${date.getMonth()+1}/${date.getFullYear()} - ${weekdayName} - رمضان ${i}`;
-    setDirection(tdDate);
-    tr.appendChild(tdDate);
+   const tdDate = document.createElement("td");
+tdDate.contentEditable = true;
+tdDate.textContent = `${date.toLocaleDateString('ar-EG')} - ${weekdayName} - رمضان ${i}`;
+setDirection(tdDate);
+tr.appendChild(tdDate);
+
 
     const tdTime=document.createElement("td");
     const selectTime=document.createElement("select");
@@ -193,4 +194,5 @@ db.ref("ramadan_lectures").on("value",snapshot=>{
 
 </body>
 </html>
+
 
