@@ -119,41 +119,56 @@ function setDirection(cell){
     else { cell.style.direction="ltr"; cell.style.textAlign="left"; }
 }
 
-// إنشاء الجدول
-for(let i=1;i<=TOTAL_DAYS;i++){
-    const tr=document.createElement("tr");
-    const date=new Date(START_DATE);
-    date.setDate(START_DATE.getDate()+(i-1));
-    const weekdayName=weekdays[date.getDay()];
-    if(weekdayName==="الجمعة") tr.classList.add("friday");
+// إنشاء الجدول بدون تكرار التواريخ
+const existingDates = new Set(); // لتخزين التواريخ المضافة
 
-   const tdDate = document.createElement("td");
-tdDate.contentEditable = true;
-tdDate.textContent = `${date.toLocaleDateString('ar-EG')} - ${weekdayName} - رمضان ${i}`;
-setDirection(tdDate);
-tr.appendChild(tdDate);
+for (let i = 1; i <= TOTAL_DAYS; i++) {
+    const tr = document.createElement("tr");
+    const date = new Date(START_DATE);
+    date.setDate(START_DATE.getDate() + (i - 1));
+    
+    const weekdayName = weekdays[date.getDay()];
+    if (weekdayName === "الجمعة") tr.classList.add("friday");
 
+    // تحويل التاريخ إلى نص عربي بطريقة صحيحة
+    const dateStr = `${date.toLocaleDateString('ar-EG')} - ${weekdayName} - رمضان ${i}`;
 
-    const tdTime=document.createElement("td");
-    const selectTime=document.createElement("select");
-    const options=weekdayName==="الجمعة"
-        ? ["بعد صلاة الجمعة","بعد صلاة العصر","بعد صلاة المغرب","بعد صلاة العشاء"]
-        : ["بعد صلاة الظهر","بعد صلاة العصر","بعد صلاة المغرب","بعد صلاة العشاء"];
-    options.forEach(opt=>{const option=document.createElement("option"); option.value=opt; option.textContent=opt; selectTime.appendChild(option);});
+    // التأكد من عدم تكرار التاريخ
+    if (existingDates.has(dateStr)) continue;
+    existingDates.add(dateStr);
+
+    const tdDate = document.createElement("td");
+    tdDate.contentEditable = true;
+    tdDate.textContent = dateStr;
+    setDirection(tdDate);
+    tr.appendChild(tdDate);
+
+    const tdTime = document.createElement("td");
+    const selectTime = document.createElement("select");
+    const options = weekdayName === "الجمعة"
+        ? ["بعد صلاة الجمعة", "بعد صلاة العصر", "بعد صلاة المغرب", "بعد صلاة العشاء"]
+        : ["بعد صلاة الظهر", "بعد صلاة العصر", "بعد صلاة المغرب", "بعد صلاة العشاء"];
+    options.forEach(opt => {
+        const option = document.createElement("option");
+        option.value = opt;
+        option.textContent = opt;
+        selectTime.appendChild(option);
+    });
     tdTime.appendChild(selectTime);
     tr.appendChild(tdTime);
 
-    const tdName=document.createElement("td");
-    tdName.contentEditable=true;
+    const tdName = document.createElement("td");
+    tdName.contentEditable = true;
     setDirection(tdName);
     tr.appendChild(tdName);
 
-    const tdPhone=document.createElement("td");
-    tdPhone.contentEditable=true;
+    const tdPhone = document.createElement("td");
+    tdPhone.contentEditable = true;
     setDirection(tdPhone);
     tr.appendChild(tdPhone);
 
     tbody.appendChild(tr);
+
 }
 
 // تحديث الاتجاه وحفظ البيانات
@@ -194,5 +209,6 @@ db.ref("ramadan_lectures").on("value",snapshot=>{
 
 </body>
 </html>
+
 
 
