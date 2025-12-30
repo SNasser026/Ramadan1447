@@ -93,49 +93,50 @@ select { width:100%; padding:8px; font-size:16px; border-radius:8px; border:1px 
 </div>
 
 <script>
-const TOTAL_DAYS=30;
-const START_DATE=new Date(2026,1,19);
-const weekdays=["الأحد","الاثنين","الثلاثاء","الأربعاء","الخميس","الجمعة","السبت"];
-const tbody=document.querySelector("#mainTable tbody");
+const TOTAL_DAYS = 30;
+const START_DATE = new Date(2026, 1, 19); // فبراير = 1
+const weekdays = ["الأحد","الاثنين","الثلاثاء","الأربعاء","الخميس","الجمعة","السبت"];
+const tbody = document.querySelector("#mainTable tbody");
 
 const firebaseConfig = {
-apiKey: "AIzaSyCdhY4owQq8O6wgVOHcQQeaj2mrrwYr-j8",
-authDomain: "ramadan-1447.firebaseapp.com",
-databaseURL: "https://ramadan-1447-default-rtdb.firebaseio.com",
-projectId: "ramadan-1447",
-storageBucket: "ramadan-1447.firebasestorage.app",
-messagingSenderId: "322777922760",
-appId: "1:322777922760:web:c20f28bfc04698dae039fd",
-measurementId: "G-4SQT5J8CFH"
+  apiKey: "AIzaSyCdhY4owQq8O6wgVOHcQQeaj2mrrwYr-j8",
+  authDomain: "ramadan-1447.firebaseapp.com",
+  databaseURL: "https://ramadan-1447-default-rtdb.firebaseio.com",
+  projectId: "ramadan-1447",
+  storageBucket: "ramadan-1447.firebasestorage.app",
+  messagingSenderId: "322777922760",
+  appId: "1:322777922760:web:c20f28bfc04698dae039fd",
+  measurementId: "G-4SQT5J8CFH"
 };
 firebase.initializeApp(firebaseConfig);
-const db=firebase.database();
+const db = firebase.database();
 
-// دالة لضبط الاتجاه تلقائيًا
 function setDirection(cell){
-    const arabicRegex=/[\u0600-\u06FF]/;
-    const content=cell.textContent.trim();
-    if(arabicRegex.test(content)){ cell.style.direction="rtl"; cell.style.textAlign="right"; }
-    else { cell.style.direction="ltr"; cell.style.textAlign="left"; }
+    const arabicRegex = /[\u0600-\u06FF]/;
+    const content = cell.textContent.trim();
+    if(arabicRegex.test(content)){
+        cell.style.direction="rtl";
+        cell.style.textAlign="right";
+    } else {
+        cell.style.direction="ltr";
+        cell.style.textAlign="left";
+    }
 }
 
 // إنشاء الجدول بدون تكرار التواريخ
-const existingDates = new Set(); // لتخزين التواريخ المضافة
+const existingDates = new Set();
 
-for (let i = 1; i <= TOTAL_DAYS; i++) {
-    const tr = document.createElement("tr");
+for (let i = 0; i < TOTAL_DAYS; i++) {
     const date = new Date(START_DATE);
-    date.setDate(START_DATE.getDate() + (i - 1));
-    
+    date.setDate(START_DATE.getDate() + i);
     const weekdayName = weekdays[date.getDay()];
-    if (weekdayName === "الجمعة") tr.classList.add("friday");
+    const dateStr = `${date.toLocaleDateString('ar-EG')} - ${weekdayName} - رمضان ${i+1}`;
 
-    // تحويل التاريخ إلى نص عربي بطريقة صحيحة
-    const dateStr = `${date.toLocaleDateString('ar-EG')} - ${weekdayName} - رمضان ${i}`;
-
-    // التأكد من عدم تكرار التاريخ
     if (existingDates.has(dateStr)) continue;
     existingDates.add(dateStr);
+
+    const tr = document.createElement("tr");
+    if (weekdayName === "الجمعة") tr.classList.add("friday");
 
     const tdDate = document.createElement("td");
     tdDate.contentEditable = true;
@@ -146,8 +147,8 @@ for (let i = 1; i <= TOTAL_DAYS; i++) {
     const tdTime = document.createElement("td");
     const selectTime = document.createElement("select");
     const options = weekdayName === "الجمعة"
-        ? ["بعد صلاة الجمعة", "بعد صلاة العصر", "بعد صلاة المغرب", "بعد صلاة العشاء"]
-        : ["بعد صلاة الظهر", "بعد صلاة العصر", "بعد صلاة المغرب", "بعد صلاة العشاء"];
+        ? ["بعد صلاة الجمعة","بعد صلاة العصر","بعد صلاة المغرب","بعد صلاة العشاء"]
+        : ["بعد صلاة الظهر","بعد صلاة العصر","بعد صلاة المغرب","بعد صلاة العشاء"];
     options.forEach(opt => {
         const option = document.createElement("option");
         option.value = opt;
@@ -168,16 +169,15 @@ for (let i = 1; i <= TOTAL_DAYS; i++) {
     tr.appendChild(tdPhone);
 
     tbody.appendChild(tr);
-
 }
 
-// تحديث الاتجاه وحفظ البيانات
-tbody.addEventListener("input",(e)=>{
-    const cell=e.target.closest("td");
+// حفظ البيانات عند التعديل
+tbody.addEventListener("input", (e)=>{
+    const cell = e.target.closest("td");
     if(cell) setDirection(cell);
 
-    const rows=Array.from(tbody.querySelectorAll("tr")).map(tr=>{
-        const tds=tr.querySelectorAll("td");
+    const rows = Array.from(tbody.querySelectorAll("tr")).map(tr=>{
+        const tds = tr.querySelectorAll("td");
         return {
             date: tds[0].textContent.trim(),
             time: tds[1].querySelector("select").value,
@@ -186,29 +186,35 @@ tbody.addEventListener("input",(e)=>{
         };
     });
     db.ref("ramadan_lectures").set(rows);
-    document.getElementById("saveMessage").style.display="inline";
-    setTimeout(()=>{document.getElementById("saveMessage").style.display="none";},1500);
+    document.getElementById("saveMessage").style.display = "inline";
+    setTimeout(()=>{document.getElementById("saveMessage").style.display = "none";},1500);
 });
 
-// جلب البيانات من Firebase
-db.ref("ramadan_lectures").on("value",snapshot=>{
-    const data=snapshot.val();
+// تحميل البيانات من Firebase
+db.ref("ramadan_lectures").on("value", snapshot=>{
+    const data = snapshot.val();
     if(!data) return;
     tbody.querySelectorAll("tr").forEach((tr,i)=>{
-        const tds=tr.querySelectorAll("td");
+        const tds = tr.querySelectorAll("td");
         if(data[i]){
-            tds[0].textContent=data[i].date;
-            tds[1].querySelector("select").value=data[i].time;
-            tds[2].textContent=data[i].lecturer;
-            tds[3].textContent=data[i].contact;
+            tds[0].textContent = data[i].date;
+            tds[1].querySelector("select").value = data[i].time;
+            tds[2].textContent = data[i].lecturer;
+            tds[3].textContent = data[i].contact;
             tds.forEach(td=>setDirection(td));
         }
     });
+});
+
+// أزرار الحفظ والطباعة
+document.getElementById("saveBtn").addEventListener("click", ()=>{
+    const event = new Event('input');
+    tbody.dispatchEvent(event);
+});
+document.getElementById("printBtn").addEventListener("click", ()=>{
+    window.print();
 });
 </script>
 
 </body>
 </html>
-
-
-
