@@ -177,21 +177,22 @@ tbody tr.friday{ background-color:var(--friday) !important; }
 <script>
 /* إعدادات Firebase */
 const firebaseConfig={
-apiKey:"AIzaSyCdhY4owQq8O6wgVOHcQQeaj2mrrwYr-j8",
-authDomain:"ramadan-1447.firebaseapp.com",
-databaseURL:"https://ramadan-1447-default-rtdb.firebaseio.com",
-projectId:"ramadan-1447",
-storageBucket:"ramadan-1447.firebasestorage.app",
-messagingSenderId:"322777922760",
-appId:"1:322777922760:web:c20f28bfc04698dae039fd",
-measurementId:"G-4SQT5J8CFH"
+  apiKey:"AIzaSyCdhY4owQq8O6wgVOHcQQeaj2mrrwYr-j8",
+  authDomain:"ramadan-1447.firebaseapp.com",
+  databaseURL:"https://ramadan-1447-default-rtdb.firebaseio.com",
+  projectId:"ramadan-1447",
+  storageBucket:"ramadan-1447.firebasestorage.app",
+  messagingSenderId:"322777922760",
+  appId:"1:322777922760:web:c20f28bfc04698dae039fd"
 };
 firebase.initializeApp(firebaseConfig);
-const db=firebase.database();
+const db = firebase.database();
+
+const saveMessage = document.getElementById("saveMessage");
 
 /* إنشاء الجدول */
 const TOTAL_DAYS = 30;
-const START_DATE = new Date(2026, 1, 19); // 19 فبراير 2026
+const START_DATE = new Date(2026, 1, 19);
 const weekdays = ["الأحد","الاثنين","الثلاثاء","الأربعاء","الخميس","الجمعة","السبت"];
 const tbody = document.querySelector("#mainTable tbody");
 
@@ -202,52 +203,44 @@ for (let i = 1; i <= TOTAL_DAYS; i++) {
   date.setDate(START_DATE.getDate() + (i - 1));
   const weekdayName = weekdays[date.getDay()];
 
-  if (weekdayName === "الجمعة") {
-    tr.classList.add("friday");
-  }
-
-  const tdDate = document.createElement("td");
-  tdDate.textContent =
-    `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()} - ${weekdayName} - رمضان ${i}`;
-
-  tr.appendChild(tdDate);
-  tbody.appendChild(tr);
+  if (weekdayName === "الجمعة") tr.classList.add("friday");
 
   /* التاريخ */
-  const tdDate=document.createElement("td");
-  tdDate.contentEditable=true;
-  tdDate.textContent=${date.getDate()}/${date.getMonth()+1}/${date.getFullYear()} - ${weekdayName} - رمضان ${i};
+  const tdDate = document.createElement("td");
+  tdDate.contentEditable = true;
+  tdDate.textContent =
+    `${date.getDate()}/${date.getMonth()+1}/${date.getFullYear()} - ${weekdayName} - رمضان ${i}`;
   tr.appendChild(tdDate);
 
-
   /* الوقت */
-  const tdTime=document.createElement("td");
-  const select=document.createElement("select");
-  const opts=weekdayName==="الجمعة"
+  const tdTime = document.createElement("td");
+  const select = document.createElement("select");
+  const opts = weekdayName === "الجمعة"
     ? ["بعد صلاة الجمعة","بعد صلاة العصر","بعد صلاة المغرب","بعد صلاة العشاء"]
     : ["بعد صلاة الظهر","بعد صلاة العصر","بعد صلاة المغرب","بعد صلاة العشاء"];
   opts.forEach(o=>{
-    let op=document.createElement("option");
-    op.value=o; op.textContent=o;
+    const op = document.createElement("option");
+    op.value = o;
+    op.textContent = o;
     select.appendChild(op);
   });
   tdTime.appendChild(select);
   tr.appendChild(tdTime);
 
   /* اسم المحاضر */
-  const tdName=document.createElement("td");
-  tdName.contentEditable=true;
+  const tdName = document.createElement("td");
+  tdName.contentEditable = true;
   tr.appendChild(tdName);
 
   /* رقم التواصل */
-  const tdPhone=document.createElement("td");
-  tdPhone.contentEditable=true;
+  const tdPhone = document.createElement("td");
+  tdPhone.contentEditable = true;
   tr.appendChild(tdPhone);
 
   tbody.appendChild(tr);
 }
 
-/* 🔥 الإصلاح الرسمي لمشكلة انقلاب النص على iPhone */
+/* إصلاح اتجاه النص */
 function placeCaretAtEnd(el){
   const range=document.createRange();
   const sel=window.getSelection();
@@ -257,23 +250,9 @@ function placeCaretAtEnd(el){
   sel.addRange(range);
 }
 
-document.addEventListener("focusin", function(e){
+document.addEventListener("focusin", e=>{
   if(e.target.matches('td[contenteditable="true"]')){
     e.target.setAttribute("dir","rtl");
-    e.target.setAttribute("lang","ar");
-
-    let val=e.target.textContent.trim();
-    if(!val || !/[\u0600-\u06FF]/.test(val[0])){
-      if(!e.target.textContent.startsWith("\u200F")){
-        e.target.textContent="\u200F"+e.target.textContent;
-        placeCaretAtEnd(e.target);
-      }
-    }
-  }
-});
-
-document.addEventListener("input", function(e){
-  if(e.target.matches('td[contenteditable="true"]')){
     if(!e.target.textContent.startsWith("\u200F")){
       e.target.textContent="\u200F"+e.target.textContent;
       placeCaretAtEnd(e.target);
@@ -281,7 +260,6 @@ document.addEventListener("input", function(e){
   }
 });
 
-/* تنظيف RLM قبل الحفظ */
 function clean(v){
   return v ? v.replace(/^\u200F/,"").trim() : "";
 }
@@ -321,6 +299,7 @@ db.ref("ramadan_lectures").on("value", snap=>{
 
 </body>
 </html>
+
 
 
 
