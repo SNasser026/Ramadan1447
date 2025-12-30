@@ -190,31 +190,25 @@ firebase.initializeApp(firebaseConfig);
 const db=firebase.database();
 
 /* إنشاء الجدول */
-const TOTAL_DAYS = 30;
-const START_DATE = new Date(2026, 1, 19); // 19 فبراير 2026
-const weekdays = ["الأحد","الاثنين","الثلاثاء","الأربعاء","الخميس","الجمعة","السبت"];
-const tbody = document.querySelector("#mainTable tbody");
+const TOTAL_DAYS=30;
+const START_DATE=new Date(2026,1,19);
+const weekdays=["الأحد","الاثنين","الثلاثاء","الأربعاء","الخميس","الجمعة","السبت"];
+const tbody=document.querySelector("#mainTable tbody");
 
-for (let i = 1; i <= TOTAL_DAYS; i++) {
-  const tr = document.createElement("tr");
+for(let i=1;i<=TOTAL_DAYS;i++){
+  const tr=document.createElement("tr");
 
-  const date = new Date(START_DATE);
-  date.setDate(START_DATE.getDate() + (i - 1));
-  const weekdayName = weekdays[date.getDay()];
+  const date=new Date(START_DATE);
+  date.setDate(START_DATE.getDate()+(i-1));
+  const weekdayName=weekdays[date.getDay()];
 
-  if (weekdayName === "الجمعة") {
-    tr.classList.add("friday");
-  }
+  if(weekdayName==="الجمعة") tr.classList.add("friday");
 
   /* التاريخ */
-  const tdDate = document.createElement("td");
-  tdDate.contentEditable = true;
-  tdDate.textContent = 
-    `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()} - ${weekdayName} - رمضان ${i}`;
-
+  const tdDate=document.createElement("td");
+  tdDate.contentEditable=true;
+  tdDate.textContent=${date.getDate()}/${date.getMonth()+1}/${date.getFullYear()} - ${weekdayName} - رمضان ${i};
   tr.appendChild(tdDate);
-  tbody.appendChild(tr);
-}
 
 
   /* الوقت */
