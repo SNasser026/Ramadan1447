@@ -176,7 +176,7 @@ tbody.addEventListener("input", (e)=>{
     const rows = Array.from(tbody.querySelectorAll("tr")).map(tr=>{
         const tds = tr.querySelectorAll("td");
         return {
-            date: tds[0].textContent.trim(),
+            date: tds[1].textContent.trim(),
             time: tds[1].querySelector("select").value,
             lecturer: tds[2].textContent.trim(),
             contact: tds[3].textContent.trim()
@@ -194,7 +194,7 @@ db.ref("ramadan_lectures").on("value", snapshot=>{
     tbody.querySelectorAll("tr").forEach((tr,i)=>{
         const tds = tr.querySelectorAll("td");
         if(data[i]){
-            tds[0].textContent = data[i].date;
+            tds[1].textContent = data[i].date;
             tds[1].querySelector("select").value = data[i].time;
             tds[2].textContent = data[i].lecturer;
             tds[3].textContent = data[i].contact;
@@ -215,3 +215,4 @@ document.getElementById("printBtn").addEventListener("click", ()=>{
 
 </body>
 </html>
+
