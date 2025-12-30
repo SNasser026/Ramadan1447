@@ -124,10 +124,11 @@ function setDirection(cell){
 }
 
 const existingDates = new Set();
+let ramadanDay = 1; // رقم رمضان يبدأ من 1
 
 for (let date = new Date(START_DATE); date <= END_DATE; date.setDate(date.getDate() + 1)) {
     const weekdayName = weekdays[date.getDay()];
-    const dateStr = `${date.toLocaleDateString('ar-EG')} - ${weekdayName}`;
+    const dateStr = `${date.toLocaleDateString('ar-EG')} - ${weekdayName} - رمضان ${ramadanDay}`;
 
     if (existingDates.has(dateStr)) continue;
     existingDates.add(dateStr);
@@ -166,7 +167,10 @@ for (let date = new Date(START_DATE); date <= END_DATE; date.setDate(date.getDat
     tr.appendChild(tdPhone);
 
     tbody.appendChild(tr);
+
+    ramadanDay++; // زيادة رقم يوم رمضان لكل يوم
 }
+
 
 // حفظ البيانات عند التعديل
 tbody.addEventListener("input", (e)=>{
@@ -215,5 +219,6 @@ document.getElementById("printBtn").addEventListener("click", ()=>{
 
 </body>
 </html>
+
 
 
