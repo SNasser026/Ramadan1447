@@ -93,8 +93,8 @@ select { width:100%; padding:8px; font-size:16px; border-radius:8px; border:1px 
 </div>
 
 <script>
-const TOTAL_DAYS = 30;
-const START_DATE = new Date(2026, 1, 19); // فبراير = 1
+const START_DATE = new Date(2026, 1, 19); // 19 فبراير
+const END_DATE = new Date(2026, 2, 20);   // 20 مارس
 const weekdays = ["الأحد","الاثنين","الثلاثاء","الأربعاء","الخميس","الجمعة","السبت"];
 const tbody = document.querySelector("#mainTable tbody");
 
@@ -123,14 +123,11 @@ function setDirection(cell){
     }
 }
 
-// إنشاء الجدول بدون تكرار التواريخ
 const existingDates = new Set();
 
-for (let i = 0; i < TOTAL_DAYS; i++) {
-    const date = new Date(START_DATE);
-    date.setDate(START_DATE.getDate() + i);
+for (let date = new Date(START_DATE); date <= END_DATE; date.setDate(date.getDate() + 1)) {
     const weekdayName = weekdays[date.getDay()];
-    const dateStr = `${date.toLocaleDateString('ar-EG')} - ${weekdayName} - رمضان ${i+1}`;
+    const dateStr = `${date.toLocaleDateString('ar-EG')} - ${weekdayName}`;
 
     if (existingDates.has(dateStr)) continue;
     existingDates.add(dateStr);
