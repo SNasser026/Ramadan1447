@@ -169,11 +169,6 @@ select {
   box-shadow:0 2px 6px rgba(0,0,0,0.08);
 }
 
-@media print {
-  body * { visibility: hidden; }
-  #mainTable, #mainTable * { visibility: visible; }
-  #mainTable { position:absolute; top:0; left:0; width:100%; }
-}
 </style>
 
 <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
@@ -249,59 +244,88 @@ function setDirection(cell){
 
 // إنشاء الجدول
 const existingDates = new Set();
+let ramadanDay = 1; // رقم رمضان يبدأ من 1
+
 for (let date = new Date(START_DATE); date <= END_DATE; date.setDate(date.getDate() + 1)) {
-  const weekdayName = weekdays[date.getDay()];
-  const dateStr = `${date.toLocaleDateString('ar-EG')} - ${weekdayName}`;
-  if (existingDates.has(dateStr)) continue;
-  existingDates.add(dateStr);
+    const weekdayName = weekdays[date.getDay()];
+    const dateStr = `${date.toLocaleDateString('ar-EG')} - ${weekdayName} - رمضان ${ramadanDay}`;
 
-  const tr = document.createElement("tr");
-  if (weekdayName === "الجمعة") tr.classList.add("friday");
+    if (existingDates.has(dateStr)) continue;
+    existingDates.add(dateStr);
 
-  const tdDate = document.createElement("td");
-  tdDate.contentEditable = true;
-  tdDate.textContent = dateStr;
-  setDirection(tdDate);
-  tr.appendChild(tdDate);
+    const tr = document.createElement("tr");
+    if (weekdayName === "الجمعة") tr.classList.add("friday");
 
-  const tdTime = document.createElement("td");
-  const selectTime = document.createElement("select");
-  const options = weekdayName === "الجمعة" 
-    ? ["بعد صلاة الجمعة","بعد صلاة العصر","بعد صلاة المغرب","بعد صلاة العشاء"]
-    : ["بعد صلاة الظهر","بعد صلاة العصر","بعد صلاة المغرب","بعد صلاة العشاء"];
-  options.forEach(opt => {
-    const option = document.createElement("option");
-    option.value = opt;
-    option.textContent = opt;
-    selectTime.appendChild(option);
-  });
-  tdTime.appendChild(selectTime);
-  tr.appendChild(tdTime);
+    const tdDate = document.createElement("td");
+    tdDate.contentEditable = true;
+    tdDate.textContent = dateStr;
+    setDirection(tdDate);
+    tr.appendChild(tdDate);
 
-  const tdName = document.createElement("td");
-  tdName.contentEditable = true;
-  setDirection(tdName);
-  tr.appendChild(tdName);
+    const tdTime = document.createElement("td");
+    const selectTime = document.createElement("select");
+    const options = weekdayName === "الجمعة"
+        ? ["بعد صلاة الجمعة","بعد صلاة العصر","بعد صلاة المغرب","بعد صلاة العشاء"]
+        : ["بعد صلاة الظهر","بعد صلاة العصر","بعد صلاة المغرب","بعد صلاة العشاء"];
+    options.forEach(opt => {
+        const option = document.createElement("option");
+        option.value = opt;
+        option.textContent = opt;
+        selectTime.appendChild(option);
+    });
+    tdTime.appendChild(selectTime);
+    tr.appendChild(tdTime);
 
-  const tdPhone = document.createElement("td");
-  tdPhone.contentEditable = true;
-  setDirection(tdPhone);
-  tr.appendChild(tdPhone);
+    const tdName = document.createElement("td");
+    tdName.contentEditable = true;
+    setDirection(tdName);
+    tr.appendChild(tdName);
 
-  tbody.appendChild(tr);
+    const tdPhone = document.createElement("td");
+    tdPhone.contentEditable = true;
+    setDirection(tdPhone);
+    tr.appendChild(tdPhone);
+
+    tbody.appendChild(tr);
+
+    ramadanDay++; // زيادة رقم يوم رمضان لكل يوم
 }
+// حفظ البيانات عند التعديل
+tbody.addEventListener("input", (e)=>{
+    const cell = e.target.closest("td");
+    if(cell) setDirection(cell);
 
-// حفظ البيانات
-function saveData() {
-  const rows = Array.from(tbody.querySelectorAll("tr")).map(tr => {
-    const tds = tr.querySelectorAll("td");
-    return {
-      time: tds[1].querySelector("select")?.value || "",
-      lecturer: tds[2].textContent.trim(),
-      contact: tds[3].textContent.trim()
-    };
-  });
-  db.ref("ramadan_lectures").set(rows);
-  const msg = document.getElementById("saveMessage");
-  msg.style.display = "inline";
-  setTimeout(()=>{ msg.style.display
+    const rows = Array.from(tbody.querySelectorAll("tr")).map(tr=>{
+        const tds = tr.querySelectorAll("td");
+        return {
+            date: tds[0].textContent.trim(),
+            time: tds[1].querySelector("select").value,
+            lecturer: tds[2].textContent.trim(),
+            contact: tds[3].textContent.trim()
+        };
+    });
+    db.ref("ramadan_lectures").set(rows);
+    document.getElementById("saveMessage").style.display = "inline";
+    setTimeout(()=>{document.getElementById("saveMessage").style.display = "none";},1500);
+});
+
+// تحميل البيانات من Firebase
+db.ref("ramadan_lectures").on("value", snapshot=>{
+    const data = snapshot.val();
+    if(!data) return;
+    tbody.querySelectorAll("tr").forEach((tr,i)=>{
+        const tds = tr.querySelectorAll("td");
+        if(data[i]){
+            tds[0].textContent = data[i].date;
+            tds[1].querySelector("select").value = data[i].time;
+            tds[2].textContent = data[i].lecturer;
+            tds[3].textContent = data[i].contact;
+            tds.forEach(td=>setDirection(td));
+        }
+    });
+});
+
+</script>
+
+</body>
+</html>
