@@ -191,6 +191,8 @@ const db = firebase.database();
 const saveMessage = document.getElementById("saveMessage");
 
 /* إنشاء الجدول */
+  tbody.innerHTML = "";
+
 const TOTAL_DAYS = 29;
 const START_DATE = new Date(2026, 1, 19); // 19 فبراير 2026
 
@@ -300,6 +302,7 @@ db.ref("ramadan_lectures").on("value", snap=>{
 
 </body>
 </html>
+
 
 
 
