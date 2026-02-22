@@ -92,47 +92,40 @@ select { width:100%; padding:6px; }
 #saveBtn { background:var(--gold); }
 #printBtn { background:var(--accent); }
 
-/* ⭐⭐⭐ طباعة A4 صفحة واحدة ⭐⭐⭐ */
+/* ⭐⭐⭐ حل نهائي للطباعة صفحة واحدة ⭐⭐⭐ */
 @media print {
 
   @page {
     size: A4 portrait;
-    margin: 8mm;
+    margin: 6mm;
   }
 
-  html, body {
-    width:210mm;
-    height:297mm;
+  body {
     background:#fff;
   }
 
-  .container {
-    margin:0;
-    padding:0;
-    max-width:100%;
-  }
-
-  .card {
-    border-width:2px;
-    padding:10px;
-    box-shadow:none;
-  }
-
-  h1 { font-size:20px; margin-bottom:4px; }
-  h2 { font-size:16px; margin-bottom:6px; }
-
-  table { font-size:13px; }
-  thead th { padding:6px; }
-  tbody td { padding:6px; }
-
-  tr, td, th {
-    page-break-inside: avoid;
-  }
-
+  /* إخفاء الأزرار */
   #saveBtn,
   #printBtn {
     display:none;
   }
+
+  /* تصغير الصفحة بالكامل */
+  .container {
+    transform: scale(0.75); /* عدلها إذا أردت */
+    transform-origin: top center;
+    width: 130%;
+    margin: 0 auto;
+  }
+
+  /* منع تقطيع الصفوف */
+  tr, td, th {
+    page-break-inside: avoid !important;
+  }
+
+  table { font-size:12px; }
+  h1 { font-size:18px; }
+  h2 { font-size:14px; }
 }
 </style>
 
@@ -184,6 +177,7 @@ const firebaseConfig = {
   authDomain: "ramadan-1447.firebaseapp.com",
   databaseURL: "https://ramadan-1447-default-rtdb.firebaseio.com"
 };
+
 firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
 
