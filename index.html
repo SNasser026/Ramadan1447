@@ -13,7 +13,6 @@
   --card:#ffffff;
   --accent:#34624f;
   --gold:#d4af37;
-  --muted:#6b705c;
   --friday:#cfe3d6;
   --header-col:#49876d;
   --first-col:#49876d;
@@ -24,7 +23,6 @@ html, body {
   font-family:'Amiri', serif;
   background:var(--bg) url('https://www.toptal.com/designers/subtlepatterns/uploads/moroccan-flower.png') repeat;
   background-size:300px;
-  color:#000;
 }
 
 .container {
@@ -39,114 +37,98 @@ html, body {
   padding:22px;
   border:4px solid var(--gold);
   box-shadow:0 8px 24px rgba(0,0,0,0.08);
-  position:relative;
-}
-
-.card:before {
-  content:"";
-  position:absolute;
-  top:-10px;
-  left:-10px;
-  right:-10px;
-  bottom:-10px;
-  border:3px solid var(--gold);
-  border-radius:20px;
-  pointer-events:none;
-}
-
-h1::before {
-  content:"";
-  display:block;
-  width:140px;
-  height:160px;
-  margin:0 auto 10px auto;
-  background:url('./img.png') center/contain no-repeat;
 }
 
 h1,h2 {
-  font-size:26px;
   text-align:center;
-  margin-bottom:15px;
   color:var(--accent);
-  font-weight:700;
+  margin-bottom:10px;
 }
 
 .table-wrapper {
-  width:100%;
   overflow-x:auto;
-  margin-top:10px;
 }
 
 table {
   width:100%;
-  min-width:650px;
   border-collapse:collapse;
-  font-size:18px;
   background:#fff;
-  border-radius:12px;
-  overflow:hidden;
   border:2px solid #a9a9a9;
-  table-layout:fixed;
 }
 
 thead th {
   background:var(--header-col);
   color:#fff;
-  text-align:center;
-  padding:14px;
+  padding:12px;
   border:1px solid #a9a9a9;
 }
 
 tbody td {
-  padding:16px;
+  padding:12px;
   text-align:center;
   border:1px solid #a9a9a9;
-  word-wrap:break-word;
 }
 
-tbody tr:nth-child(odd) { background: rgba(245,245,245,0.7); }
-tbody tr:nth-child(even) { background:#ffffff; }
-tbody tr:hover { background:#e0f0e8; }
-tbody td:first-child { background:var(--first-col); color:#fff; font-weight:700; width:120px; }
-tbody tr.friday { background-color:var(--friday) !important; }
+tbody tr.friday { background:var(--friday); }
+tbody td:first-child { background:var(--first-col); color:#fff; font-weight:bold; }
 
-select {
-  width:100%;
-  padding:8px;
-  font-size:16px;
-  border-radius:8px;
-  border:1px solid #a9a9a9;
-  background:#fff;
-  cursor:pointer;
-  text-align-last:center;
-}
+select { width:100%; padding:6px; }
 
 .card-header {
   display:flex;
   justify-content:space-between;
   align-items:center;
-  flex-wrap:wrap;
-  padding:12px 10px;
+  margin-bottom:10px;
 }
 
 #saveBtn,#printBtn {
   padding:10px 16px;
-  border-radius:12px;
-  cursor:pointer;
-  font-weight:bold;
-  color:#fff;
-  font-size:15px;
+  border-radius:10px;
   border:none;
-  transition:0.2s;
+  color:#fff;
+  cursor:pointer;
 }
 
-#saveBtn { background: var(--gold); }
-#printBtn { background: var(--accent); margin-left:10px; }
+#saveBtn { background:var(--gold); }
+#printBtn { background:var(--accent); }
 
-#saveMessage { color:green; font-weight:bold; display:none; margin-right:8px; }
-
-/* ⭐ الطباعة مطابقة للصفحة الأصلية */
+/* ⭐⭐⭐ طباعة A4 صفحة واحدة ⭐⭐⭐ */
 @media print {
+
+  @page {
+    size: A4 portrait;
+    margin: 8mm;
+  }
+
+  html, body {
+    width:210mm;
+    height:297mm;
+    background:#fff;
+  }
+
+  .container {
+    margin:0;
+    padding:0;
+    max-width:100%;
+  }
+
+  .card {
+    border-width:2px;
+    padding:10px;
+    box-shadow:none;
+  }
+
+  h1 { font-size:20px; margin-bottom:4px; }
+  h2 { font-size:16px; margin-bottom:6px; }
+
+  table { font-size:13px; }
+  thead th { padding:6px; }
+  tbody td { padding:6px; }
+
+  tr, td, th {
+    page-break-inside: avoid;
+  }
+
   #saveBtn,
   #printBtn {
     display:none;
@@ -164,15 +146,14 @@ select {
   <div class="card">
 
     <div class="card-header">
-      <div style="display:flex;align-items:center;">
+      <div>
         <button id="saveBtn">💾 حفظ</button>
-        <span id="saveMessage">تم الحفظ بنجاح ✅</span>
         <button id="printBtn">🖨️ طباعة</button>
       </div>
     </div>
 
-    <h1>جدول محاضرات رمضان 1447 - جامع الإمام الربيع بن حبيب</h1>
-    <h2>السيب - وادي اللوامي</h2>
+    <h1>جدول محاضرات رمضان 1447</h1>
+    <h2>جامع الإمام الربيع بن حبيب</h2>
 
     <div class="table-wrapper">
       <table id="mainTable">
@@ -203,7 +184,6 @@ const firebaseConfig = {
   authDomain: "ramadan-1447.firebaseapp.com",
   databaseURL: "https://ramadan-1447-default-rtdb.firebaseio.com"
 };
-
 firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
 
@@ -249,22 +229,16 @@ function saveData() {
     };
   });
   db.ref("ramadan_lectures").set(rows);
-
-  const msg = document.getElementById("saveMessage");
-  msg.style.display = "inline";
-  setTimeout(() => msg.style.display = "none", 1500);
 }
 
 document.getElementById("saveBtn").onclick = saveData;
 
-/* ⭐ زر الطباعة */
-document.getElementById("printBtn").addEventListener("click", () => {
-  window.print();
-});
+/* زر الطباعة */
+document.getElementById("printBtn").onclick = () => window.print();
 
-/* تحميل البيانات */
-db.ref("ramadan_lectures").once("value").then(snapshot => {
-  buildTable(snapshot.val() || []);
+/* تحميل */
+db.ref("ramadan_lectures").once("value").then(snap => {
+  buildTable(snap.val() || []);
 });
 </script>
 
